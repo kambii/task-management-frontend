@@ -27,7 +27,7 @@ class App extends Component {
               <h2>Tasks</h2>
               {tasks.map(task => (
                   <div key={task.id}>
-                    {task.name} {task.description} ({task.created})
+                    ({task.name}) {task.description} ({task.created})
                   </div>
               ))}
             </div>
