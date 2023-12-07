@@ -1,39 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
 import {Component} from "react";
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import taskList from "./taskList";
+import taskEdit from "./taskEdit";
+import Home from "./Home";
 
 class App extends Component {
-  state = {
-    tasks: []
-  };
-
-  async componentDidMount() {
-    try {
-      const response = await fetch('/api/getTasks');
-      const body = await response.json();
-      this.setState({ tasks: body }); // Fix: Use 'tasks' instead of 'clients'
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  }
 
   render() {
-    const { tasks } = this.state;
     return (
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <div className="App-intro">
-              <h2>Tasks</h2>
-              {tasks.map(task => (
-                  <div key={task.id}>
-                    ({task.name}) {task.description} ({task.created})
-                  </div>
-              ))}
-            </div>
-          </header>
-        </div>
-    );
+        <Router>
+          <Switch>
+            <Route path='/' exact={true} component={Home}/>
+            <Route path='/api/getTasks' exact={true} component={taskList}/>
+            <Route path='/api/updateTask/:id' component={taskEdit}/>
+          </Switch>
+        </Router>
+    )
   }
 }
 

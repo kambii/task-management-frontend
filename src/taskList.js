@@ -12,11 +12,21 @@ class taskList extends Component {
         this.remove = this.remove.bind(this);
     }
 
-    componentDidMount() {
+   /* componentDidMount() {
         fetch('api/getTasks')
             .then(response => response.json())
             .then(data => this.setState({tasks: data}));
+    }*/
+    componentDidMount() {
+        fetch('api/getTasks')
+            .then(response => response.json())
+            .then(data => {
+                const tasksArray = Array.isArray(data) ? data : [data];
+                this.setState({ tasks: tasksArray });
+            })
+            .catch(error => console.error('API error:', error));
     }
+
 
     async remove(id) {
         await fetch(`/deleteTask/${id}`, {
@@ -41,10 +51,10 @@ class taskList extends Component {
         const taskList = tasks.map(task => {
             return <tr key={task.id}>
                 <td style={{whiteSpace: 'nowrap'}}>{task.name}</td>
-                <td>{task.email}</td>
+                <td>{task.description}</td>
                 <td>
                     <ButtonGroup>
-                        <Button size="sm" color="primary" tag={Link} to={"/clients/" + task.id}>Edit</Button>
+                        <Button size="sm" color="primary" tag={Link} to={`/api/getTask/${task.id}`}>Edit</Button>
                         <Button size="sm" color="danger" onClick={() => this.remove(task.id)}>Delete</Button>
                     </ButtonGroup>
                 </td>
@@ -56,13 +66,15 @@ class taskList extends Component {
                 <AppNavbar/>
                 <Container fluid>
                     <div className="float-right">
-                        <Button color="success" tag={Link} to="/api/getTasks/new">Add Task</Button>
+                        <Button color="success" tag={Link} to="/api/addTask/new">Add Task</Button>
                     </div>
                     <h3>Tasks</h3>
                     <Table className="mt-4">
                         <thead>
                         <tr>
-                            <th width="30%">Task</th>
+                            <th width="30%">Name</th>
+                            <th width="30%">Description</th>
+                            <th width="40%">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
